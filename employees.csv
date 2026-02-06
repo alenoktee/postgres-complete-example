@@ -1,0 +1,7 @@
+employees.csv
+id,name,email,department,salary
+1,Alice Johnson,alice@company.com,Engineering,95000
+2,Bob Smith,bob@company.com,Engineering,75000
+3,Carol White,carol@company.com,Sales,85000
+4,David Brown,david@company.com,Sales,65000
+5,Eve Davis,eve@company.com,HR,72000
