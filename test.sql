@@ -122,19 +122,26 @@ ORDER BY is_active DESC;
 SELECT '' as separator;
 SELECT '=== SALARY DISTRIBUTION ===' as section;
 
+WITH salary_ranges AS (
+    SELECT 
+        CASE 
+            WHEN salary < 70000 THEN 'Below $70k'
+            WHEN salary < 80000 THEN '$70k - $80k'
+            WHEN salary < 90000 THEN '$80k - $90k'
+            WHEN salary < 100000 THEN '$90k - $100k'
+            ELSE 'Above $100k'
+        END as salary_range,
+        COUNT(*) as employee_count,
+        ROUND(AVG(salary)::NUMERIC, 2) as avg_salary
+    FROM employees
+    WHERE is_active = true
+    GROUP BY salary_range
+)
 SELECT 
-    CASE 
-        WHEN salary < 70000 THEN 'Below $70k'
-        WHEN salary < 80000 THEN '$70k - $80k'
-        WHEN salary < 90000 THEN '$80k - $90k'
-        WHEN salary < 100000 THEN '$90k - $100k'
-        ELSE 'Above $100k'
-    END as salary_range,
-    COUNT(*) as employee_count,
-    ROUND(AVG(salary)::NUMERIC, 2) as avg_salary
-FROM employees
-WHERE is_active = true
-GROUP BY salary_range
+    salary_range,
+    employee_count,
+    avg_salary
+FROM salary_ranges
 ORDER BY 
     CASE 
         WHEN salary_range = 'Below $70k' THEN 1
@@ -155,7 +162,7 @@ SELECT
     name,
     start_date,
     end_date,
-    EXTRACT(DAY FROM end_date - start_date)::INT as duration_days,
+    (end_date - start_date) as duration_days,
     status,
     budget
 FROM projects
